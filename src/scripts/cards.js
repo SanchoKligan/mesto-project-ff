@@ -1,3 +1,5 @@
+const cardTemplate = document.querySelector('#card-template').content;
+
 export const initialCards = [
     {
       name: 'Архыз',
@@ -25,22 +27,33 @@ export const initialCards = [
     }
 ];
 
-export const createCard = (cardTemplate, cardData) => {
+export const createCard = (cardData, deleteHandler, likeHandler, openHandler) => {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
-  const cardImage = cardElement.querySelector('.card__image');
+  const image = cardElement.querySelector('.card__image');
+  const title= cardElement.querySelector('.card__title');
+  const deleteButton = cardElement.querySelector('.card__delete-button');
+  const likeButton = cardElement.querySelector('.card__like-button');
 
-  cardElement.querySelector('.card__title').textContent = cardData.name;
+  title.textContent = cardData.name;
   
-  cardImage.src = cardData.link;
-  cardImage.alt = `Картинка для "${ cardData.name }"`;
+  image.src = cardData.link;
+  image.alt = `Картинка для "${ cardData.name }"`;
+
+  deleteButton.addEventListener('click', deleteHandler);
+  likeButton.addEventListener('click', likeHandler);
+  image.addEventListener('click', openHandler);
 
   return cardElement;
 };
 
-export const deleteCard = (deleteButton) => {
-  deleteButton.parentElement.remove();
+export const deleteCard = (e) => {
+  e.stopPropagation();
+
+  e.target.parentElement.remove();
 }
 
-export const likeCard = (likeButton) => {
-  likeButton.classList.toggle('card__like-button_is-active');
+export const likeCard = (e) => {
+  e.stopPropagation();
+
+  e.target.classList.toggle('card__like-button_is-active');
 }
