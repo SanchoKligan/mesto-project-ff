@@ -1,25 +1,19 @@
 import '../pages/index.css';
-import { initialCards } from "./cards";
+import { initialCards, createCard, deleteCard, likeCard } from "./cards";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const cardsListElement = document.querySelector('.places__list');
 
-const createCard = (cardData, deleteCardHandler) => {
-  const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+initialCards.forEach((cardData) => {
+  cardsListElement.append(createCard(cardTemplate, cardData));
+});
 
-  cardElement.querySelector('.card__title').textContent = cardData.name;
-  cardElement.querySelector('.card__image').src = cardData.link;
-  cardElement.querySelector('.card__image').alt = `Картинка для "${ cardData.name }"`;
+cardsListElement.addEventListener('click', (e) => {
+  const clickedElement = e.target;
 
-  cardElement.querySelector('.card__delete-button').addEventListener('click', deleteCardHandler);
-
-  return cardElement;
-};
-
-const deleteCard = (e) => {
-  e.target.parentElement.remove();
-}
-
-initialCards.forEach((card) => {
-  cardsListElement.append(createCard(card, deleteCard));
+  if (clickedElement.classList.contains('card__delete-button')) {
+    deleteCard(clickedElement);
+  } else if (clickedElement.classList.contains('card__like-button')) {
+    likeCard(clickedElement);
+  }
 });
