@@ -3,14 +3,21 @@ import { initialCards, createCard, deleteCard, likeCard } from "./cards";
 import { openModal, closeModal } from './modal';
 
 const cardsListElement = document.querySelector('.places__list');
+
 const editProfileButton = document.querySelector('.profile__edit-button');
 const editProfileModal = document.querySelector('.popup_type_edit');
-const editProfileForm = document.querySelector('.popup__form');
+const editProfileForm = document.querySelector('.popup_type_edit .popup__form');
 const profileNameInput = document.querySelector('.popup__input_type_name');
 const profileJobInput = document.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+
+const addCardButton = document.querySelector('.profile__add-button');
 const addCardModal = document.querySelector('.popup_type_new-card');
+const addCardForm = document.querySelector('.popup_type_new-card .popup__form');
+const addCardNameInput = document.querySelector('.popup__input_type_card-name');
+const addCardUrlInput = document.querySelector('.popup__input_type_url');
+
 const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
@@ -36,6 +43,20 @@ const handleEditProfileFormSubmit = (e) => {
   closeModal(editProfileModal)
 }
 
+const handleAddCardFormSubmit = (e) => {
+  e.preventDefault();
+
+  const cardData = {
+    name: addCardNameInput.value,
+    link: addCardUrlInput.value,
+  };
+
+  cardsListElement.prepend(createCard(cardData, deleteCard, likeCard, openCardModal));
+
+  addCardForm.reset();
+  closeModal(addCardModal);
+}
+
 initialCards.forEach((cardData) => {
   cardsListElement.append(createCard(cardData, deleteCard, likeCard, openCardModal));
 });
@@ -48,6 +69,12 @@ editProfileButton.addEventListener('click', () => {
 });
 
 editProfileForm.addEventListener('submit', handleEditProfileFormSubmit);
+
+addCardButton.addEventListener('click', () => {
+  openModal(addCardModal);
+});
+
+addCardForm.addEventListener('submit', handleAddCardFormSubmit);
 
 [editProfileModal, addCardModal, cardModal].forEach((modalElement) => {
   modalElement.addEventListener('click', (e) => {
