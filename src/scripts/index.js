@@ -1,5 +1,6 @@
 import '../pages/index.css';
-import { initialCards, createCard, deleteCard, likeCard } from "./cards";
+import { createCard, deleteCard, likeCard } from "./card";
+import { initialCards } from './cards';
 import { openModal, closeModal } from './modal';
 
 const cardsListElement = document.querySelector('.places__list');
@@ -22,14 +23,11 @@ const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
 
-const openCardModal = (e) => {
-  const image = e.target;
-  const title = image.parentElement.querySelector('.card__title');
+const openCardModal = ({ name, link }) => {
+  cardModalImage.src = link;
+  cardModalImage.alt = name;
 
-  cardModalImage.src = image.src;
-  cardModalImage.alt = image.alt;
-
-  cardModalCaption.textContent = title.textContent;
+  cardModalCaption.textContent = name;
 
   openModal(cardModal);
 }
@@ -76,7 +74,7 @@ addCardButton.addEventListener('click', () => {
 
 addCardForm.addEventListener('submit', handleAddCardFormSubmit);
 
-[editProfileModal, addCardModal, cardModal].forEach((modalElement) => {
+document.querySelectorAll('.popup').forEach((modalElement) => {
   modalElement.addEventListener('click', (e) => {
     const elementClasses = e.target.classList;
 
