@@ -3,15 +3,19 @@ import { initialCards, createCard, deleteCard, likeCard } from "./cards";
 import { openModal, closeModal } from './modal';
 
 const cardsListElement = document.querySelector('.places__list');
-const editModal = document.querySelector('.popup_type_edit');
+const editProfileButton = document.querySelector('.profile__edit-button');
+const editProfileModal = document.querySelector('.popup_type_edit');
+const editProfileForm = document.querySelector('.popup__form');
+const profileNameInput = document.querySelector('.popup__input_type_name');
+const profileJobInput = document.querySelector('.popup__input_type_description');
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
 const addCardModal = document.querySelector('.popup_type_new-card');
 const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
 
 const openCardModal = (e) => {
-  e.stopPropagation();
-
   const image = e.target;
   const title = image.parentElement.querySelector('.card__title');
 
@@ -23,14 +27,30 @@ const openCardModal = (e) => {
   openModal(cardModal);
 }
 
+const handleEditProfileFormSubmit = (e) => {
+  e.preventDefault();
+
+  profileTitle.textContent = profileNameInput.value;
+  profileDescription.textContent = profileJobInput.value;
+
+  closeModal(editProfileModal)
+}
+
 initialCards.forEach((cardData) => {
   cardsListElement.append(createCard(cardData, deleteCard, likeCard, openCardModal));
 });
 
-[editModal, addCardModal, cardModal].forEach((modalElement) => {
-  modalElement.addEventListener('click', (e) => {
-    e.stopPropagation();
+editProfileButton.addEventListener('click', () => {
+  profileNameInput.value = profileTitle.textContent;
+  profileJobInput.value = profileDescription.textContent;
 
+  openModal(editProfileModal);
+});
+
+editProfileForm.addEventListener('submit', handleEditProfileFormSubmit);
+
+[editProfileModal, addCardModal, cardModal].forEach((modalElement) => {
+  modalElement.addEventListener('click', (e) => {
     const elementClasses = e.target.classList;
 
     if (elementClasses.contains('popup') || elementClasses.contains('popup__close')) {
