@@ -82,7 +82,7 @@ editProfileForm.addEventListener('submit', handleEditProfileFormSubmit);
 addCardButton.addEventListener('click', () => {
   addCardForm.reset();
   clearValidation(addCardForm, validationConfig);
-  
+
   openModal(addCardModal);
 });
 

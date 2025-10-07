@@ -1,24 +1,30 @@
 const showInputError = (formElement, inputElement, errorMessage, validationConfig) => {
   const errorElement = formElement.querySelector(`.${ inputElement.id }-error`);
 
-  errorElement.textContent = errorMessage;
+  if (errorElement) {
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add(validationConfig.errorClass);
+  }
 
   inputElement.classList.add(validationConfig.inputErrorClass);
-  errorElement.classList.add(validationConfig.errorClass);
 };
 
 const hideInputError = (formElement, inputElement, validationConfig) => {
   const errorElement = formElement.querySelector(`.${ inputElement.id }-error`);
 
-  errorElement.textContent = '';
+  if (errorElement) {
+    errorElement.textContent = '';
+    errorElement.classList.remove(validationConfig.errorClass);
+  }
 
   inputElement.classList.remove(validationConfig.inputErrorClass);
-  errorElement.classList.remove(validationConfig.errorClass);
 };
 
 const isValid = (formElement, inputElement, validationConfig) => {
+  const errorMessage = inputElement.dataset.errorMessage ?? '';
+
   if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+    inputElement.setCustomValidity(errorMessage);
   } else {
     inputElement.setCustomValidity('');
   }
@@ -67,7 +73,7 @@ export const clearValidation = (formElement, validationConfig) => {
   const submitButton = formElement.querySelector(validationConfig.submitButtonSelector);
 
   inputList.forEach((inputElement) => {
-    inputElement.setCustomValidity("");
+    inputElement.setCustomValidity('');
     hideInputError(formElement, inputElement, validationConfig);
   });
 
