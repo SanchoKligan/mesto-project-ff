@@ -2,6 +2,7 @@ import '../pages/index.css';
 import { createCard, deleteCard, likeCard } from "./card";
 import { initialCards } from './cards';
 import { openModal, closeModal } from './modal';
+import { enableValidation, clearValidation } from './validation';
 
 const cardsListElement = document.querySelector('.places__list');
 
@@ -22,6 +23,15 @@ const addCardUrlInput = document.querySelector('.popup__input_type_url');
 const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible',
+}
 
 const openCardModal = (name, link) => {
   cardModalImage.src = link;
@@ -51,7 +61,6 @@ const handleAddCardFormSubmit = (e) => {
 
   cardsListElement.prepend(createCard(cardData, deleteCard, likeCard, openCardModal));
 
-  addCardForm.reset();
   closeModal(addCardModal);
 }
 
@@ -63,12 +72,17 @@ editProfileButton.addEventListener('click', () => {
   profileNameInput.value = profileTitle.textContent;
   profileJobInput.value = profileDescription.textContent;
 
+  clearValidation(editProfileForm, validationConfig);
+
   openModal(editProfileModal);
 });
 
 editProfileForm.addEventListener('submit', handleEditProfileFormSubmit);
 
 addCardButton.addEventListener('click', () => {
+  addCardForm.reset();
+  clearValidation(addCardForm, validationConfig);
+  
   openModal(addCardModal);
 });
 
@@ -83,3 +97,5 @@ document.querySelectorAll('.popup').forEach((modalElement) => {
     }
   });
 });
+
+enableValidation(validationConfig);
