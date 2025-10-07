@@ -23,7 +23,7 @@ const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
 
-const openCardModal = ({ name, link }) => {
+const openCardModal = (name, link) => {
   cardModalImage.src = link;
   cardModalImage.alt = name;
 

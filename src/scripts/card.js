@@ -15,7 +15,7 @@ export const createCard = (cardData, deleteHandler, likeHandler, openHandler) =>
 
   deleteButton.addEventListener('click', () => deleteHandler(cardElement));
   likeButton.addEventListener('click', () => likeHandler(likeButton));
-  image.addEventListener('click', () => openHandler(cardData));
+  image.addEventListener('click', () => openHandler(name, link));
 
   return cardElement;
 };
