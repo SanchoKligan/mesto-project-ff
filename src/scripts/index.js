@@ -1,5 +1,10 @@
 import '../pages/index.css';
-import { addCard, getInitialCards, getUserData, updateUserData } from './api';
+import {
+  addCardApi,
+  getInitialCardsApi,
+  getUserDataApi,
+  updateUserDataApi,
+} from './api';
 import { createCard, deleteCard, likeCard } from "./card";
 import { openModal, closeModal } from './modal';
 import { enableValidation, clearValidation } from './validation';
@@ -46,7 +51,7 @@ const openCardModal = (name, link) => {
 const handleEditProfileFormSubmit = (e) => {
   e.preventDefault();
 
-  updateUserData(profileNameInput.value, profileJobInput.value)
+  updateUserDataApi(profileNameInput.value, profileJobInput.value)
     .then(({ name, about }) => {
       profileTitle.textContent = name;
       profileDescription.textContent = about;
@@ -61,7 +66,7 @@ const handleEditProfileFormSubmit = (e) => {
 const handleAddCardFormSubmit = (e) => {
   e.preventDefault();
 
-  addCard(addCardNameInput.value, addCardUrlInput.value)
+  addCardApi(addCardNameInput.value, addCardUrlInput.value)
     .then((cardData) => {
       cardsListElement.prepend(createCard(cardData, deleteCard, likeCard, openCardModal));
 
@@ -72,7 +77,7 @@ const handleAddCardFormSubmit = (e) => {
     });
 }
 
-Promise.all([getUserData(), getInitialCards()])
+Promise.all([getUserDataApi(), getInitialCardsApi()])
   .then(([user, cards]) => {
     const { name, about, avatar } = user;
 

@@ -14,7 +14,7 @@ const parseResponse = (response) => {
   return Promise.reject(`Ошибка: ${ response.status }`);
 }
 
-export const getUserData = () => {
+export const getUserDataApi = () => {
   return fetch(`${ config.baseUrl }/users/me`, {
     headers: config.headers,
   })
@@ -22,7 +22,7 @@ export const getUserData = () => {
     .catch((err) => Promise.reject(err));
 }
 
-export const getInitialCards = () => {
+export const getInitialCardsApi = () => {
   return fetch(`${ config.baseUrl }/cards`, {
     headers: config.headers,
   })
@@ -30,7 +30,7 @@ export const getInitialCards = () => {
     .catch((err) => Promise.reject(err));
 }
 
-export const updateUserData = (name, about) => {
+export const updateUserDataApi = (name, about) => {
   return fetch(`${ config.baseUrl }/users/me`, {
     method: 'PATCH',
     headers: config.headers,
@@ -40,11 +40,20 @@ export const updateUserData = (name, about) => {
     .catch((err) => Promise.reject(err));
 }
 
-export const addCard = (name, link) => {
+export const addCardApi = (name, link) => {
   return fetch(`${ config.baseUrl }/cards`, {
     method: 'POST',
     headers: config.headers,
     body: JSON.stringify({ name, link }),
+  })
+    .then((res) => parseResponse(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const deleteCardApi = (cardId) => {
+  return fetch(`${ config.baseUrl }/cards/${ cardId }`, {
+    method: 'DELETE',
+    headers: config.headers,
   })
     .then((res) => parseResponse(res))
     .catch((err) => Promise.reject(err));
