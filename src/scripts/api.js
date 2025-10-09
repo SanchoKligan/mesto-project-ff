@@ -76,3 +76,13 @@ export const dislikeCardApi = (cardId) => {
     .then((res) => parseResponse(res))
     .catch((err) => Promise.reject(err));
 }
+
+export const updateUserAvatarApi = (avatar) => {
+  return fetch(`${ config.baseUrl }/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({ avatar }),
+  })
+    .then((res) => parseResponse(res))
+    .catch((err) => Promise.reject(err));
+}

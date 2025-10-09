@@ -3,6 +3,7 @@ import {
   addCardApi,
   getInitialCardsApi,
   getUserDataApi,
+  updateUserAvatarApi,
   updateUserDataApi,
 } from './api';
 import { createCard, deleteCard, likeCard } from "./card";
@@ -11,24 +12,29 @@ import { enableValidation, clearValidation } from './validation';
 
 const cardsListElement = document.querySelector('.places__list');
 
-const editProfileButton = document.querySelector('.profile__edit-button');
-const editProfileModal = document.querySelector('.popup_type_edit');
-const editProfileForm = document.querySelector('.popup_type_edit .popup__form');
-const profileNameInput = document.querySelector('.popup__input_type_name');
-const profileJobInput = document.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
 
+const editProfileButton = document.querySelector('.profile__edit-button');
+const editProfileModal = document.querySelector('.popup_type_edit');
+const editProfileForm = editProfileModal.querySelector('.popup__form');
+const profileNameInput = editProfileForm.querySelector('.popup__input_type_name');
+const profileJobInput = editProfileForm.querySelector('.popup__input_type_description');
+
 const addCardButton = document.querySelector('.profile__add-button');
 const addCardModal = document.querySelector('.popup_type_new-card');
-const addCardForm = document.querySelector('.popup_type_new-card .popup__form');
-const addCardNameInput = document.querySelector('.popup__input_type_card-name');
-const addCardUrlInput = document.querySelector('.popup__input_type_url');
+const addCardForm = addCardModal.querySelector('.popup__form');
+const addCardNameInput = addCardForm.querySelector('.popup__input_type_card-name');
+const addCardUrlInput = addCardForm.querySelector('.popup__input_type_url');
 
 const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
+
+const updateAvatarModal = document.querySelector('.popup_type_avatar')
+const updateAvatarForm = updateAvatarModal.querySelector('.popup__form');
+const avatarUrlInput = updateAvatarForm.querySelector('.popup__input_type_avatar-url');
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -85,6 +91,20 @@ const handleAddCardFormSubmit = (e) => {
     });
 }
 
+const handleUpdateAvatarFormSubmit = (e) => {
+  e.preventDefault();
+
+  updateUserAvatarApi(avatarUrlInput.value)
+    .then(({ avatar }) => {
+      profileImage.style.backgroundImage = `url(${ avatar })`;
+
+      closeModal(updateAvatarModal);
+    })
+    .catch((err) => {
+      console.error(`Ошибка при обновлении аватара: ${ err }`);
+    })
+}
+
 Promise.all([getUserDataApi(), getInitialCardsApi()])
   .then(([user, cards]) => {
     const { name, about, avatar, _id } = user;
@@ -131,6 +151,15 @@ addCardButton.addEventListener('click', () => {
 });
 
 addCardForm.addEventListener('submit', handleAddCardFormSubmit);
+
+profileImage.addEventListener('click', () => {
+  updateAvatarForm.reset();
+  clearValidation(updateAvatarForm, validationConfig);
+
+  openModal(updateAvatarModal);
+});
+
+updateAvatarForm.addEventListener('submit', handleUpdateAvatarFormSubmit);
 
 document.querySelectorAll('.popup').forEach((modalElement) => {
   modalElement.addEventListener('click', (e) => {
