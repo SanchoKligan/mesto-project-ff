@@ -118,33 +118,6 @@ const handleUpdateAvatarFormSubmit = () => {
     })
 }
 
-Promise.all([getUserDataApi(), getInitialCardsApi()])
-  .then(([user, cards]) => {
-    const { name, about, avatar, _id } = user;
-
-    currentUserId = _id;
-
-    profileTitle.textContent = name;
-    profileDescription.textContent = about;
-    profileImage.style.backgroundImage = `url(${ avatar })`;
-
-    cards.forEach((cardData) => {
-      cardsListElement.append(createCard(
-        cardData,
-        deleteCard,
-        likeCard,
-        openCardModal,
-        currentUserId,
-      ));
-    });
-  })
-  .catch((err) => {
-    console.error(`Ошибка при загрузке данных профиля и/или карточек: ${ err }`);
-
-    profileTitle.textContent = 'Имя';
-    profileDescription.textContent = 'Занятие';
-  });
-
 editProfileButton.addEventListener('click', () => {
   profileNameInput.value = profileTitle.textContent;
   profileJobInput.value = profileDescription.textContent;
@@ -191,3 +164,30 @@ document.querySelectorAll('.popup').forEach((modalElement) => {
 });
 
 enableValidation(validationConfig);
+
+Promise.all([getUserDataApi(), getInitialCardsApi()])
+  .then(([user, cards]) => {
+    const { name, about, avatar, _id } = user;
+
+    currentUserId = _id;
+
+    profileTitle.textContent = name;
+    profileDescription.textContent = about;
+    profileImage.style.backgroundImage = `url(${ avatar })`;
+
+    cards.forEach((cardData) => {
+      cardsListElement.append(createCard(
+        cardData,
+        deleteCard,
+        likeCard,
+        openCardModal,
+        currentUserId,
+      ));
+    });
+  })
+  .catch((err) => {
+    console.error(`Ошибка при загрузке данных профиля и/или карточек: ${ err }`);
+
+    profileTitle.textContent = 'Имя';
+    profileDescription.textContent = 'Занятие';
+  });
