@@ -1,8 +1,14 @@
-import { deleteCardApi } from "./api";
+import { deleteCardApi, likeCardApi, dislikeCardApi } from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-export const createCard = (cardData, deleteHandler, likeHandler, openHandler, userId) => {
+export const createCard = (
+  cardData,
+  deleteHandler,
+  likeHandler,
+  openHandler,
+  userId
+) => {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const image = cardElement.querySelector('.card__image');
   const title= cardElement.querySelector('.card__title');
@@ -16,11 +22,21 @@ export const createCard = (cardData, deleteHandler, likeHandler, openHandler, us
   image.alt = name;
   likeCounter.textContent = likes.length;
 
-  likeButton.addEventListener('click', () => likeHandler(likeButton));
+  if (likes.some((userData) => userData._id === userId)) {
+    likeButton.classList.add('card__like-button_is-active');
+  }
+
   image.addEventListener('click', () => openHandler(name, link));
+  likeButton.addEventListener(
+    'click',
+    () => likeHandler(likeButton, _id, likeCounter),
+  );
 
   if (owner._id === userId) {
-    deleteButton.addEventListener('click', () => deleteHandler(cardElement, _id));
+    deleteButton.addEventListener(
+      'click',
+      () => deleteHandler(cardElement, _id),
+    );
   } else {
     deleteButton.style.display = 'none';
   }
@@ -38,6 +54,18 @@ export const deleteCard = (cardElement, cardId) => {
     });
 }
 
-export const likeCard = (likeButton) => {
-  likeButton.classList.toggle('card__like-button_is-active');
+export const likeCard = (likeButton, cardId, likeCounter) => {
+  const likeButtonClasses = likeButton.classList;
+  const likeAction = likeButtonClasses.contains('card__like-button_is-active')
+    ? dislikeCardApi
+    : likeCardApi;
+
+  likeAction(cardId)
+    .then(({ likes }) => {
+      likeButtonClasses.toggle('card__like-button_is-active');
+      likeCounter.textContent = likes.length;
+    })
+    .catch((err) => {
+      console.error(`Ошибка при постановке/снятии лайка карточки: ${ err }`);
+    });
 }

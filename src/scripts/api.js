@@ -58,3 +58,21 @@ export const deleteCardApi = (cardId) => {
     .then((res) => parseResponse(res))
     .catch((err) => Promise.reject(err));
 }
+
+export const likeCardApi = (cardId) => {
+  return fetch(`${ config.baseUrl }/cards/likes/${ cardId }`, {
+    method: 'PUT',
+    headers: config.headers,
+  })
+    .then((res) => parseResponse(res))
+    .catch((err) => Promise.reject(err));
+}
+
+export const dislikeCardApi = (cardId) => {
+  return fetch(`${ config.baseUrl }/cards/likes/${ cardId }`, {
+    method: 'DELETE',
+    headers: config.headers,
+  })
+    .then((res) => parseResponse(res))
+    .catch((err) => Promise.reject(err));
+}
