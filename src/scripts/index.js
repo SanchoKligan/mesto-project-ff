@@ -19,22 +19,25 @@ const profileImage = document.querySelector('.profile__image');
 const editProfileButton = document.querySelector('.profile__edit-button');
 const editProfileModal = document.querySelector('.popup_type_edit');
 const editProfileForm = editProfileModal.querySelector('.popup__form');
+const editProfileSubmitButton = editProfileForm.querySelector('.popup__button');
 const profileNameInput = editProfileForm.querySelector('.popup__input_type_name');
 const profileJobInput = editProfileForm.querySelector('.popup__input_type_description');
 
 const addCardButton = document.querySelector('.profile__add-button');
 const addCardModal = document.querySelector('.popup_type_new-card');
 const addCardForm = addCardModal.querySelector('.popup__form');
+const addCardSubmitButton = addCardForm.querySelector('.popup__button');
 const addCardNameInput = addCardForm.querySelector('.popup__input_type_card-name');
 const addCardUrlInput = addCardForm.querySelector('.popup__input_type_url');
+
+const updateAvatarModal = document.querySelector('.popup_type_avatar')
+const updateAvatarForm = updateAvatarModal.querySelector('.popup__form');
+const updateAvatarSubmitButton = updateAvatarForm.querySelector('.popup__button');
+const avatarUrlInput = updateAvatarForm.querySelector('.popup__input_type_avatar-url');
 
 const cardModal = document.querySelector('.popup_type_image');
 const cardModalImage = cardModal.querySelector('.popup__image');
 const cardModalCaption = cardModal.querySelector('.popup__caption');
-
-const updateAvatarModal = document.querySelector('.popup_type_avatar')
-const updateAvatarForm = updateAvatarModal.querySelector('.popup__form');
-const avatarUrlInput = updateAvatarForm.querySelector('.popup__input_type_avatar-url');
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -56,10 +59,24 @@ const openCardModal = (name, link) => {
   openModal(cardModal);
 }
 
-const handleEditProfileFormSubmit = (e) => {
+const handleFormSubmit = (e, submitButton, submitAction) => {
   e.preventDefault();
 
-  updateUserDataApi(profileNameInput.value, profileJobInput.value)
+  const originalButtonText = submitButton.textContent;
+
+  submitButton.textContent = 'Сохранение...';
+  submitButton.disabled = true;
+
+  submitAction().finally(() => {
+    setTimeout(() => {
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }, 500);
+  });
+}
+
+const handleEditProfileFormSubmit = () => {
+  return updateUserDataApi(profileNameInput.value, profileJobInput.value)
     .then(({ name, about }) => {
       profileTitle.textContent = name;
       profileDescription.textContent = about;
@@ -71,10 +88,8 @@ const handleEditProfileFormSubmit = (e) => {
     });
 }
 
-const handleAddCardFormSubmit = (e) => {
-  e.preventDefault();
-
-  addCardApi(addCardNameInput.value, addCardUrlInput.value)
+const handleAddCardFormSubmit = () => {
+  return addCardApi(addCardNameInput.value, addCardUrlInput.value)
     .then((cardData) => {
       cardsListElement.prepend(createCard(
         cardData,
@@ -91,10 +106,8 @@ const handleAddCardFormSubmit = (e) => {
     });
 }
 
-const handleUpdateAvatarFormSubmit = (e) => {
-  e.preventDefault();
-
-  updateUserAvatarApi(avatarUrlInput.value)
+const handleUpdateAvatarFormSubmit = () => {
+  return updateUserAvatarApi(avatarUrlInput.value)
     .then(({ avatar }) => {
       profileImage.style.backgroundImage = `url(${ avatar })`;
 
@@ -141,7 +154,9 @@ editProfileButton.addEventListener('click', () => {
   openModal(editProfileModal);
 });
 
-editProfileForm.addEventListener('submit', handleEditProfileFormSubmit);
+editProfileForm.addEventListener('submit', (e) => {
+  handleFormSubmit(e, editProfileSubmitButton, handleEditProfileFormSubmit);
+});
 
 addCardButton.addEventListener('click', () => {
   addCardForm.reset();
@@ -150,7 +165,9 @@ addCardButton.addEventListener('click', () => {
   openModal(addCardModal);
 });
 
-addCardForm.addEventListener('submit', handleAddCardFormSubmit);
+addCardForm.addEventListener('submit', (e) => {
+  handleFormSubmit(e, addCardSubmitButton, handleAddCardFormSubmit);
+});
 
 profileImage.addEventListener('click', () => {
   updateAvatarForm.reset();
@@ -159,7 +176,9 @@ profileImage.addEventListener('click', () => {
   openModal(updateAvatarModal);
 });
 
-updateAvatarForm.addEventListener('submit', handleUpdateAvatarFormSubmit);
+updateAvatarForm.addEventListener('submit', (e) => {
+  handleFormSubmit(e, updateAvatarSubmitButton, handleUpdateAvatarFormSubmit);
+});
 
 document.querySelectorAll('.popup').forEach((modalElement) => {
   modalElement.addEventListener('click', (e) => {
