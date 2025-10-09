@@ -1,4 +1,5 @@
 import '../pages/index.css';
+import { getInitialCards, getUserData } from './api';
 import { createCard, deleteCard, likeCard } from "./card";
 import { initialCards } from './cards';
 import { openModal, closeModal } from './modal';
@@ -13,6 +14,7 @@ const profileNameInput = document.querySelector('.popup__input_type_name');
 const profileJobInput = document.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileImage = document.querySelector('.profile__image');
 
 const addCardButton = document.querySelector('.profile__add-button');
 const addCardModal = document.querySelector('.popup_type_new-card');
@@ -64,9 +66,27 @@ const handleAddCardFormSubmit = (e) => {
   closeModal(addCardModal);
 }
 
-initialCards.forEach((cardData) => {
-  cardsListElement.append(createCard(cardData, deleteCard, likeCard, openCardModal));
-});
+Promise.all([getUserData(), getInitialCards()])
+  .then(([user, cards]) => {
+    const { name, about, avatar } = user;
+
+    profileTitle.textContent = name ?? 'DefaultTitle';
+    profileDescription.textContent = about ?? 'DefaultDesc';
+
+    if (avatar) {
+      profileImage.style.backgroundImage = `url(${ avatar })`;
+    }
+
+    cards.forEach((cardData) => {
+      cardsListElement.append(createCard(cardData, deleteCard, likeCard, openCardModal));
+    });
+  })
+  .catch((err) => {
+    console.error(`Ошибка при загрузке данных профиля и/или карточек: ${ err }`);
+
+    profileTitle.textContent = 'DefaultTitle';
+    profileDescription.textContent = 'DefaultDesc';
+  });
 
 editProfileButton.addEventListener('click', () => {
   profileNameInput.value = profileTitle.textContent;
