@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { getInitialCards, getUserData } from './api';
+import { getInitialCards, getUserData, updateUserData } from './api';
 import { createCard, deleteCard, likeCard } from "./card";
 import { initialCards } from './cards';
 import { openModal, closeModal } from './modal';
@@ -47,10 +47,16 @@ const openCardModal = (name, link) => {
 const handleEditProfileFormSubmit = (e) => {
   e.preventDefault();
 
-  profileTitle.textContent = profileNameInput.value;
-  profileDescription.textContent = profileJobInput.value;
+  updateUserData(profileNameInput.value, profileJobInput.value)
+    .then(({ name, about }) => {
+      profileTitle.textContent = name;
+      profileDescription.textContent = about;
 
-  closeModal(editProfileModal)
+      closeModal(editProfileModal);
+    })
+    .catch((err) => {
+      console.error(`Ошибка при обновлении данных профиля: ${ err }`);
+    });
 }
 
 const handleAddCardFormSubmit = (e) => {

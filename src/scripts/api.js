@@ -29,3 +29,13 @@ export const getInitialCards = () => {
     .then((res) => parseResponse(res))
     .catch((err) => Promise.reject(err));
 }
+
+export const updateUserData = (name, about) => {
+  return fetch(`${ config.baseUrl }/users/me`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({ name, about }),
+  })
+    .then((res) => parseResponse(res))
+    .catch((err) => Promise.reject(err));
+}
