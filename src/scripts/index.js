@@ -1,7 +1,6 @@
 import '../pages/index.css';
 import { addCard, getInitialCards, getUserData, updateUserData } from './api';
 import { createCard, deleteCard, likeCard } from "./card";
-import { initialCards } from './cards';
 import { openModal, closeModal } from './modal';
 import { enableValidation, clearValidation } from './validation';
 
@@ -77,12 +76,9 @@ Promise.all([getUserData(), getInitialCards()])
   .then(([user, cards]) => {
     const { name, about, avatar } = user;
 
-    profileTitle.textContent = name ?? 'DefaultTitle';
-    profileDescription.textContent = about ?? 'DefaultDesc';
-
-    if (avatar) {
-      profileImage.style.backgroundImage = `url(${ avatar })`;
-    }
+    profileTitle.textContent = name;
+    profileDescription.textContent = about;
+    profileImage.style.backgroundImage = `url(${ avatar })`;
 
     cards.forEach((cardData) => {
       cardsListElement.append(createCard(cardData, deleteCard, likeCard, openCardModal));
@@ -91,8 +87,8 @@ Promise.all([getUserData(), getInitialCards()])
   .catch((err) => {
     console.error(`Ошибка при загрузке данных профиля и/или карточек: ${ err }`);
 
-    profileTitle.textContent = 'DefaultTitle';
-    profileDescription.textContent = 'DefaultDesc';
+    profileTitle.textContent = 'Имя';
+    profileDescription.textContent = 'Занятие';
   });
 
 editProfileButton.addEventListener('click', () => {

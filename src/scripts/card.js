@@ -6,12 +6,13 @@ export const createCard = (cardData, deleteHandler, likeHandler, openHandler) =>
   const title= cardElement.querySelector('.card__title');
   const deleteButton = cardElement.querySelector('.card__delete-button');
   const likeButton = cardElement.querySelector('.card__like-button');
-  const { name, link } = cardData;
+  const likeCounter = cardElement.querySelector('.card__like-counter');
+  const { name, link, likes } = cardData;
 
   title.textContent = name;
-  
   image.src = link;
   image.alt = name;
+  likeCounter.textContent = likes.length;
 
   deleteButton.addEventListener('click', () => deleteHandler(cardElement));
   likeButton.addEventListener('click', () => likeHandler(likeButton));
