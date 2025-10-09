@@ -39,3 +39,13 @@ export const updateUserData = (name, about) => {
     .then((res) => parseResponse(res))
     .catch((err) => Promise.reject(err));
 }
+
+export const addCard = (name, link) => {
+  return fetch(`${ config.baseUrl }/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify({ name, link }),
+  })
+    .then((res) => parseResponse(res))
+    .catch((err) => Promise.reject(err));
+}

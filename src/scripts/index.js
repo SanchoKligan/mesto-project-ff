@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { getInitialCards, getUserData, updateUserData } from './api';
+import { addCard, getInitialCards, getUserData, updateUserData } from './api';
 import { createCard, deleteCard, likeCard } from "./card";
 import { initialCards } from './cards';
 import { openModal, closeModal } from './modal';
@@ -62,14 +62,15 @@ const handleEditProfileFormSubmit = (e) => {
 const handleAddCardFormSubmit = (e) => {
   e.preventDefault();
 
-  const cardData = {
-    name: addCardNameInput.value,
-    link: addCardUrlInput.value,
-  };
+  addCard(addCardNameInput.value, addCardUrlInput.value)
+    .then((cardData) => {
+      cardsListElement.prepend(createCard(cardData, deleteCard, likeCard, openCardModal));
 
-  cardsListElement.prepend(createCard(cardData, deleteCard, likeCard, openCardModal));
-
-  closeModal(addCardModal);
+      closeModal(addCardModal);
+    })
+    .catch((err) => {
+      console.error(`Ошибка при добавлении карточки: ${ err }`);
+    });
 }
 
 Promise.all([getUserData(), getInitialCards()])
