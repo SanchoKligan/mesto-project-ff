@@ -39,6 +39,8 @@ const validationConfig = {
   errorClass: 'popup__error_visible',
 }
 
+let currentUserId;
+
 const openCardModal = (name, link) => {
   cardModalImage.src = link;
   cardModalImage.alt = name;
@@ -68,7 +70,13 @@ const handleAddCardFormSubmit = (e) => {
 
   addCardApi(addCardNameInput.value, addCardUrlInput.value)
     .then((cardData) => {
-      cardsListElement.prepend(createCard(cardData, deleteCard, likeCard, openCardModal));
+      cardsListElement.prepend(createCard(
+        cardData,
+        deleteCard,
+        likeCard,
+        openCardModal,
+        currentUserId,
+      ));
 
       closeModal(addCardModal);
     })
@@ -79,14 +87,22 @@ const handleAddCardFormSubmit = (e) => {
 
 Promise.all([getUserDataApi(), getInitialCardsApi()])
   .then(([user, cards]) => {
-    const { name, about, avatar } = user;
+    const { name, about, avatar, _id } = user;
+
+    currentUserId = _id;
 
     profileTitle.textContent = name;
     profileDescription.textContent = about;
     profileImage.style.backgroundImage = `url(${ avatar })`;
 
     cards.forEach((cardData) => {
-      cardsListElement.append(createCard(cardData, deleteCard, likeCard, openCardModal));
+      cardsListElement.append(createCard(
+        cardData,
+        deleteCard,
+        likeCard,
+        openCardModal,
+        currentUserId,
+      ));
     });
   })
   .catch((err) => {
