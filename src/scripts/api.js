@@ -18,16 +18,14 @@ export const getUserDataApi = () => {
   return fetch(`${ config.baseUrl }/users/me`, {
     headers: config.headers,
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const getInitialCardsApi = () => {
   return fetch(`${ config.baseUrl }/cards`, {
     headers: config.headers,
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const updateUserDataApi = (name, about) => {
@@ -36,8 +34,7 @@ export const updateUserDataApi = (name, about) => {
     headers: config.headers,
     body: JSON.stringify({ name, about }),
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const addCardApi = (name, link) => {
@@ -46,8 +43,7 @@ export const addCardApi = (name, link) => {
     headers: config.headers,
     body: JSON.stringify({ name, link }),
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const deleteCardApi = (cardId) => {
@@ -55,8 +51,7 @@ export const deleteCardApi = (cardId) => {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const likeCardApi = (cardId) => {
@@ -64,8 +59,7 @@ export const likeCardApi = (cardId) => {
     method: 'PUT',
     headers: config.headers,
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const dislikeCardApi = (cardId) => {
@@ -73,8 +67,7 @@ export const dislikeCardApi = (cardId) => {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
 
 export const updateUserAvatarApi = (avatar) => {
@@ -83,6 +76,5 @@ export const updateUserAvatarApi = (avatar) => {
     headers: config.headers,
     body: JSON.stringify({ avatar }),
   })
-    .then((res) => parseResponse(res))
-    .catch((err) => Promise.reject(err));
+    .then(parseResponse);
 }
